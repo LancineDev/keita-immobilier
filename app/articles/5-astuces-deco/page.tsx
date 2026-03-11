@@ -280,7 +280,7 @@ export default function AstucesDecoPage() {
                   <p className="font-bold text-white">264.000.000 FCFA</p>
                 </div>
               </div>
-            </Link>
+              </Link>
             </div>
 
             {/* Calculez vos mensualités */}

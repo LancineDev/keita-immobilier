@@ -9,7 +9,7 @@ import { Badge } from "@/components/ui/badge"
 
 const newsArticles = [
   {
-    image: "/images/syndic-hero.svg",
+    image: "/images/syndic-hero.jpg",
     tags: [
       { label: "Définition du mois", href: "/articles/syndic-copropriete" },
       { label: "Lexique immobilier", href: "/articles/syndic-copropriete" },
@@ -31,7 +31,7 @@ const newsArticles = [
     href: "/articles/5-astuces-deco",
   },
   {
-    image: "/images/gestion-hero.svg",
+    image: "/images/gestion-hero.jpg",
     tags: [
       { label: "KEITA Centre d'Affaires", href: "/keita-centre-affaires" },
       { label: "Centre d'Affaires", href: "/keita-centre-affaires" },
@@ -43,7 +43,7 @@ const newsArticles = [
     href: "/keita-centre-affaires",
   },
   {
-    image: "/images/conseil-hero.svg",
+    image: "/images/conseil-hero.jpg",
     tags: [
       { label: "Le Saviez-Vous ?", href: "/articles/maisons-clous-chine" },
     ],

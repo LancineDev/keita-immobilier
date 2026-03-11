@@ -1,7 +1,9 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
+import { useRouter } from "next/navigation"
 import { Search, SlidersHorizontal, Phone } from "lucide-react"
+import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
@@ -20,7 +22,35 @@ const tabs = [
 ]
 
 export function HeroSearch() {
+  const router = useRouter()
   const [activeTab, setActiveTab] = useState("tout")
+  const [city, setCity] = useState("")
+  const [bedrooms_count, setBedrooms] = useState("")
+  const [propertyType, setPropertyType] = useState("")
+  const [budget, setBudget] = useState("")
+  const [isClient, setIsClient] = useState(false)
+
+  // Ensure component only renders after hydration
+  useEffect(() => {
+    setIsClient(true)
+  }, [])
+
+  const handleSearch = () => {
+    const params = new URLSearchParams()
+    
+    if (activeTab !== "tout") params.append("type", activeTab)
+    if (city) params.append("city", city)
+    if (bedrooms_count) params.append("bedrooms", bedrooms_count)
+    if (propertyType) params.append("propertyType", propertyType)
+    if (budget) params.append("budget", budget)
+    
+    const queryString = params.toString()
+    router.push(`/property?${queryString}`)
+  }
+
+  if (!isClient) return null
+
+  if (!isClient) return null
 
   return (
     <section className="relative min-h-[600px] lg:min-h-[700px]">
@@ -66,11 +96,13 @@ export function HeroSearch() {
                   placeholder="Ville ou code postal..."
                   className="h-11 border-border bg-background text-foreground"
                   suppressHydrationWarning
+                  value={city}
+                  onChange={(e) => setCity(e.target.value)}
                 />
               </div>
 
               {/* Bedrooms */}
-              <Select>
+              <Select value={bedrooms_count} onValueChange={setBedrooms}>
                 <SelectTrigger className="h-11 border-border bg-background text-foreground" suppressHydrationWarning>
                   <SelectValue placeholder="Chambres" />
                 </SelectTrigger>
@@ -83,7 +115,7 @@ export function HeroSearch() {
               </Select>
 
               {/* Property type */}
-              <Select>
+              <Select value={propertyType} onValueChange={setPropertyType}>
                 <SelectTrigger className="h-11 border-border bg-background text-foreground" suppressHydrationWarning>
                   <SelectValue placeholder="Type de bien" />
                 </SelectTrigger>
@@ -100,6 +132,8 @@ export function HeroSearch() {
                 type="number"
                 className="h-11 border-border bg-background text-foreground"
                 suppressHydrationWarning
+                value={budget}
+                onChange={(e) => setBudget(e.target.value)}
               />
             </div>
 
@@ -114,6 +148,7 @@ export function HeroSearch() {
               </Button>
               <Button
                 suppressHydrationWarning
+                onClick={handleSearch}
                 className="h-11 bg-primary px-8 text-primary-foreground hover:bg-primary/90"
               >
                 <Search className="mr-2 h-4 w-4" />
@@ -124,14 +159,16 @@ export function HeroSearch() {
         </div>
 
         {/* Callback CTA */}
-        <Button
-          variant="outline"
-          suppressHydrationWarning
-          className="mt-8 border-accent bg-accent/10 text-accent hover:bg-accent hover:text-foreground"
-        >
-          <Phone className="mr-2 h-4 w-4" />
-          On vous rappelle
-        </Button>
+        <Link href="/contact" className="fixed bottom-4 right-4 z-50">
+          <Button
+            variant="outline"
+            suppressHydrationWarning
+            className="border-accent bg-accent/10 text-accent hover:bg-accent hover:text-foreground"
+          >
+            <Phone className="mr-2 h-4 w-4" />
+            On vous rappelle
+          </Button>
+        </Link>
       </div>
     </section>
   )

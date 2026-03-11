@@ -78,7 +78,7 @@ export default function SyndicArticlePage() {
 
             {/* Image article */}
             <div className="relative mb-6 h-64 w-full overflow-hidden rounded-md">
-              <Image src="/images/syndic-hero.svg" alt="Syndic de Copropriété" fill className="object-cover" />
+              <Image src="/images/syndic-hero.jpeg" alt="Syndic de Copropriété" fill className="object-cover" />
             </div>
 
             {/* Card article */}

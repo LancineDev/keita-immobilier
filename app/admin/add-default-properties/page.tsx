@@ -34,7 +34,7 @@ const defaultProperties = [
     category: "Villa Duplex 5 Pièces",
     description: "Magnifique villa duplex de 5 pièces à la Riviera Palmeraie. Résidence sécurisée avec piscine, parking et espaces verts.",
     features: "Piscine, Parking, Gardiennage",
-    images: ["/images/vente-couple.svg"],
+    images: ["/images/vente-couple.jpg"],
     loyer: "750.000 FCFA"
   },
   {
@@ -49,7 +49,7 @@ const defaultProperties = [
     category: "Villa Basse 4 Pièces",
     description: "Villa basse de 4 pièces en zone résidentielle de Marcory. Cadre calme et sécurisé, avec jardin privatif et parking.",
     features: "Jardin, Parking",
-    images: ["/images/gestion-hero.svg"],
+    images: ["/images/gestion-hero.jpg"],
     loyer: "1.500.000 FCFA"
   },
   {
@@ -79,7 +79,7 @@ const defaultProperties = [
     category: "Appartement 2 Pièces",
     description: "Appartement 2 pièces moderne et lumineux situé à Cocody. Proche de toutes commodités, transports et commerces.",
     features: "Meublé, Climatisé",
-    images: ["/images/syndic-hero.svg"],
+    images: ["/images/syndic-hero.jpg"],
     loyer: "700.000 FCFA"
   },
   {

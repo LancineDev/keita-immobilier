@@ -33,6 +33,52 @@ export default function PropertyPage() {
   const [filterVille, setFilterVille] = useState<string | null>(null)
   const [filterBien, setFilterBien] = useState<string | null>(null)
 
+  // loan calculator state
+  const [credit, setCredit] = useState("")
+  const [apport, setApport] = useState("")
+  const [taux, setTaux] = useState("")
+  const [duree, setDuree] = useState("")
+  const [period, setPeriod] = useState("Mensuel")
+  const [mensualite, setMensualite] = useState<number | null>(null)
+  const [error, setError] = useState<string | null>(null)
+
+  const calculer = () => {
+    setError(null)
+    const montant = parseFloat(credit.replace(/\s+/g, "")) - parseFloat((apport || "0").replace(/\s+/g, ""))
+    const tauxAnnuel = parseFloat(taux.replace(/\s+/g, "")) / 100
+    const annees = parseFloat(duree.replace(/\s+/g, ""))
+
+    if (isNaN(montant) || isNaN(tauxAnnuel) || isNaN(annees)) {
+      setError("Veuillez saisir des valeurs numériques valides.")
+      setMensualite(null)
+      return
+    }
+    if (montant <= 0) {
+      setError("Le montant du crédit doit être supérieur à l'apport.")
+      setMensualite(null)
+      return
+    }
+
+    let n: number
+    let r: number
+    if (period === "Mensuel") {
+      n = annees * 12
+      r = tauxAnnuel / 12
+    } else {
+      n = annees
+      r = tauxAnnuel
+    }
+
+    const payment = (montant * r) / (1 - Math.pow(1 + r, -n))
+    if (!isFinite(payment)) {
+      setError("Impossible de calculer avec ces paramètres, vérifiez le taux ou la durée.")
+      setMensualite(null)
+      return
+    }
+
+    setMensualite(payment)
+  }
+
   useEffect(() => {
     const q = query(collection(db, "properties"), orderBy("createdAt", "desc"))
     const unsub = onSnapshot(q, (snap) => {
@@ -155,22 +201,70 @@ export default function PropertyPage() {
             <div className="rounded-md border border-border p-4">
               <h3 className="mb-4 font-serif text-lg font-bold text-foreground">Calculez vos mensualités</h3>
               <div className="space-y-3">
-                {[
-                  { prefix: "FCFA", placeholder: "Montant du crédit" },
-                  { prefix: "FCFA", placeholder: "Apport" },
-                  { prefix: "%", placeholder: "Taux d'intérêt" },
-                  { prefix: "📅", placeholder: "Durée du prêt (années)" },
-                ].map((f, i) => (
-                  <div key={i} className="flex items-center gap-2 rounded border border-border px-3 py-2">
-                    <span className="text-xs text-muted-foreground">{f.prefix}</span>
-                    <input placeholder={f.placeholder} className="flex-1 bg-transparent text-sm outline-none" />
-                  </div>
-                ))}
-                <select className="w-full rounded border border-border px-3 py-2 text-sm">
+                <div className="flex items-center gap-2 rounded border border-border px-3 py-2">
+                  <span className="text-xs text-muted-foreground">FCFA</span>
+                  <input
+                    value={credit}
+                    onChange={e => setCredit(e.target.value)}
+                    placeholder="Montant du crédit"
+                    className="flex-1 bg-transparent text-sm outline-none"
+                    type="number"
+                  />
+                </div>
+                <div className="flex items-center gap-2 rounded border border-border px-3 py-2">
+                  <span className="text-xs text-muted-foreground">FCFA</span>
+                  <input
+                    value={apport}
+                    onChange={e => setApport(e.target.value)}
+                    placeholder="Apport"
+                    className="flex-1 bg-transparent text-sm outline-none"
+                    type="number"
+                  />
+                </div>
+                <div className="flex items-center gap-2 rounded border border-border px-3 py-2">
+                  <span className="text-xs text-muted-foreground">%</span>
+                  <input
+                    value={taux}
+                    onChange={e => setTaux(e.target.value)}
+                    placeholder="Taux d'intérêt"
+                    className="flex-1 bg-transparent text-sm outline-none"
+                    type="number"
+                    step="0.01"
+                  />
+                </div>
+                <div className="flex items-center gap-2 rounded border border-border px-3 py-2">
+                  <span className="text-xs text-muted-foreground">📅</span>
+                  <input
+                    value={duree}
+                    onChange={e => setDuree(e.target.value)}
+                    placeholder="Durée du prêt (années)"
+                    className="flex-1 bg-transparent text-sm outline-none"
+                    type="number"
+                    step="0.1"
+                  />
+                </div>
+                <select
+                  value={period}
+                  onChange={e => setPeriod(e.target.value)}
+                  className="w-full rounded border border-border px-3 py-2 text-sm"
+                >
                   <option>Mensuel</option>
                   <option>Annuel</option>
                 </select>
-                <Button className="w-full bg-foreground text-background hover:bg-foreground/80">Calculer</Button>
+                <Button
+                  onClick={calculer}
+                  className="w-full bg-foreground text-background hover:bg-foreground/80"
+                >
+                  Calculer
+                </Button>
+                {error && (
+                  <p className="mt-2 text-sm text-destructive">{error}</p>
+                )}
+                {mensualite !== null && !error && (
+                  <p className="mt-2 text-sm font-bold">
+                    Mensualité estimée : {mensualite.toFixed(2)} FCFA
+                  </p>
+                )}
               </div>
             </div>
 
