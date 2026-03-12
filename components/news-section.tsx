@@ -9,7 +9,7 @@ import { Badge } from "@/components/ui/badge"
 
 const newsArticles = [
   {
-    image: "/images/syndic-hero.jpg",
+    image: "/images/syndic-hero.jpeg",
     tags: [
       { label: "Définition du mois", href: "/articles/syndic-copropriete" },
       { label: "Lexique immobilier", href: "/articles/syndic-copropriete" },
@@ -20,7 +20,7 @@ const newsArticles = [
     href: "/articles/syndic-copropriete",
   },
   {
-    image: "/images/vente-couple.svg",
+    image: "/images/vente-couple.jpg",
     tags: [
       { label: "Immobilier", href: "/articles/5-astuces-deco" },
       { label: "Décoration", href: "/decoration" },

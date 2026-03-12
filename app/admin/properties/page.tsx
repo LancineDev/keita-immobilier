@@ -258,7 +258,7 @@ export default function AdminPropertiesPage() {
               <div className="sm:col-span-2">
                 <label className="mb-2 block text-sm font-medium">
                   Photos de la propriété
-                  <span className="ml-2 text-xs text-muted-foreground">({form.images.length} photo(s))</span>
+                  <span className="ml-2 text-xs text-muted-foreground">({form.images?.length ?? 0} photo(s))</span>
                 </label>
 
                 <input
@@ -307,7 +307,7 @@ export default function AdminPropertiesPage() {
                   )}
                 </button>
 
-                {form.images.length > 0 && (
+                {form.images?.length > 0 && (
                   <div className="mt-4 grid grid-cols-3 gap-3 sm:grid-cols-5">
                     {form.images.map((url, i) => (
                       <div key={i} className="group relative aspect-square overflow-hidden rounded-lg border-2 border-border">
