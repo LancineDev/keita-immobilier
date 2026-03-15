@@ -21,7 +21,7 @@ export const metadata: Metadata = {
   description: "Agence immobiliere en Cote d'Ivoire. Vente, Location, Syndic, Gestion locative.",
 }
 
-export default function RootLayout({
+export default function RootLayout({  
   children,
 }: Readonly<{
   children: React.ReactNode

@@ -42,7 +42,7 @@ export function ServicesSection() {
             Nos Services
           </h2>
           <p className="mx-auto max-w-2xl text-sm leading-relaxed text-muted-foreground">
-            {"Depuis 1995, Keita propose un large eventail de services immobiliers professionnels pour repondre a tous vos besoins."}
+            {"Depuis 1995, KALIMBA propose un large eventail de services immobiliers professionnels pour repondre a tous vos besoins."}
           </p>
         </div>
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">

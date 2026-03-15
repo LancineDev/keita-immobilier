@@ -10,6 +10,11 @@ import { Building2, MapPin, Phone, Mail } from "lucide-react"
 import contactImage from "@/app/assets/contact-us.png"
 import { db } from "@/lib/firebase"
 import { collection, addDoc, serverTimestamp } from "firebase/firestore"
+import { notifyAdmin } from "@/lib/notifications"
+
+const pulseStyle: React.CSSProperties = {
+  animation: "pulse-scale 4s ease-in-out infinite",
+}
 
 export default function ContactPage() {
   const [form, setForm] = useState({
@@ -34,6 +39,24 @@ export default function ContactPage() {
         ...form,
         createdAt: serverTimestamp()
       })
+      try {
+        await notifyAdmin(
+          "💬 Nouveau Message de Contact",
+          `${form.prenom} ${form.nom} - ${form.sujet}`,
+          "message-received",
+          {
+            contactName: `${form.prenom} ${form.nom}`,
+            email: form.email,
+            telephone: form.telephone,
+            sujet: form.sujet,
+            subject: form.sujet,
+            message: form.message,
+            contactMessage: form.message,
+          }
+        )
+      } catch (notificationError) {
+        console.error("Failed to send admin notification:", notificationError)
+      }
       alert("Message envoyé avec succès !")
       setForm({ nom: "", prenom: "", email: "", telephone: "", sujet: "", message: "" })
     } catch (error) {
@@ -44,6 +67,13 @@ export default function ContactPage() {
 
   return (
     <main className="min-h-screen">
+      <style>{`
+        @keyframes pulse-scale {
+          0%, 100% { transform: scale(1); }
+          50%       { transform: scale(1.06); }
+        }
+      `}</style>
+
       <Header />
 
       {/* Hero Banner */}
@@ -53,6 +83,7 @@ export default function ContactPage() {
           alt="Contactez notre agence"
           fill
           className="object-cover"
+          style={pulseStyle}
           priority
         />
         <div className="absolute inset-0 bg-black/40" />

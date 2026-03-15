@@ -12,9 +12,20 @@ export const metadata: Metadata = {
   description: "Découvrez KEITA, agence immobilière de référence en Côte d'Ivoire depuis 1994.",
 }
 
+const pulseStyle: React.CSSProperties = {
+  animation: "pulse-scale 4s ease-in-out infinite",
+}
+
 export default function AProposPage() {
   return (
     <main className="min-h-screen">
+      <style>{`
+        @keyframes pulse-scale {
+          0%, 100% { transform: scale(1); }
+          50%       { transform: scale(1.06); }
+        }
+      `}</style>
+
       <Header />
 
       {/* Hero Banner */}
@@ -24,6 +35,7 @@ export default function AProposPage() {
           alt="A propos de KEITA"
           fill
           className="object-cover"
+          style={pulseStyle}
           priority
         />
         <div className="absolute inset-0 bg-black/30" />
@@ -47,6 +59,7 @@ export default function AProposPage() {
               alt="Siège Keita Immobilier"
               fill
               className="object-cover"
+              style={pulseStyle}
             />
           </div>
 
@@ -61,7 +74,6 @@ export default function AProposPage() {
             <p className="mb-6 text-base font-semibold text-foreground">
               Nos objectifs : Gérer, Valoriser, Sécuriser et Optimiser votre patrimoine immobilier
             </p>
-            {/* Badge Agent Immobilier Agréé */}
             <div className="flex items-center justify-start">
               <div className="rounded border-2 border-primary px-4 py-3 text-center">
                 <p className="text-xs font-bold uppercase leading-tight text-primary">
@@ -73,14 +85,13 @@ export default function AProposPage() {
         </div>
       </section>
 
-      {/* ═══ SECTION DIRECTEUR / PHOTO ME.JPEG ═══ */}
+      {/* SECTION DIRECTEUR */}
       <section className="bg-secondary/30 py-16">
         <div className="mx-auto max-w-6xl px-6">
           <h2 className="mb-10 font-serif text-2xl font-bold text-foreground text-center">
             Notre Équipe de Direction
           </h2>
           <div className="flex flex-col items-center gap-8 md:flex-row md:items-start md:gap-12">
-
             {/* Photo */}
             <div className="flex-shrink-0">
               <div className="relative h-64 w-52 overflow-hidden rounded-xl shadow-lg">
@@ -89,6 +100,7 @@ export default function AProposPage() {
                   alt="Directeur Keita Immobilier"
                   fill
                   className="object-cover object-top"
+                  style={pulseStyle}
                 />
               </div>
             </div>
@@ -132,6 +144,7 @@ export default function AProposPage() {
             width={600}
             height={450}
             className="w-full object-cover"
+            style={pulseStyle}
           />
         </div>
       </section>
@@ -147,7 +160,6 @@ export default function AProposPage() {
         <p className="mb-8 text-base font-semibold text-foreground">
           Contactez-nous pour en savoir plus !
         </p>
-        {/* Logo Nomad Centre d'affaires */}
         <div className="mx-auto flex max-w-xs items-center justify-center overflow-hidden rounded-md border border-border">
           <div className="flex w-full items-center bg-[#1a3a2a]">
             <div className="bg-white p-4">

@@ -27,6 +27,16 @@ const formules = [
 export default function GestionPage() {
   return (
     <main className="min-h-screen">
+      <style>{`
+        @keyframes pulse-scale {
+          0%, 100% { transform: scale(1); }
+          50%       { transform: scale(1.06); }
+        }
+        .img-pulse {
+          animation: pulse-scale 4s ease-in-out infinite;
+        }
+      `}</style>
+
       <Header />
 
       {/* Hero Banner */}
@@ -35,7 +45,7 @@ export default function GestionPage() {
           src={gestionImage}
           alt="Gestion Locative"
           fill
-          className="object-cover"
+          className="object-cover img-pulse"
           priority
         />
         <div className="absolute inset-0 bg-black/40" />
@@ -73,7 +83,7 @@ export default function GestionPage() {
               Dans le souci de toujours mieux vous satisfaire, nous avons décliné 3 formules de Gestion locative en fonction de vos besoins et de votre budget :
             </p>
 
-            {/* 3 Formules cards - rouge avec boîte blanche */}
+            {/* 3 Formules cards */}
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
               {formules.map((formule) => (
                 <div
@@ -96,7 +106,7 @@ export default function GestionPage() {
               src={gestionImage}
               alt="Équipe KEITA gestion"
               fill
-              className="object-cover"
+              className="object-cover img-pulse"
             />
           </div>
         </div>

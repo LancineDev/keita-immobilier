@@ -12,9 +12,20 @@ import Link from "next/link"
 import Image from "next/image"
 import { Footer } from "@/components/footer"
 
+const pulseStyle: React.CSSProperties = {
+  animation: "pulse-scale 4s ease-in-out infinite",
+}
+
 export default function Home() {
   return (
     <main className="min-h-screen">
+      <style>{`
+        @keyframes pulse-scale {
+          0%, 100% { transform: scale(1); }
+          50%       { transform: scale(1.06); }
+        }
+      `}</style>
+
       <Header />
       <HeroSearch />
       <Philosophy />
@@ -28,12 +39,13 @@ export default function Home() {
           <div className="relative">
             <div className="absolute left-2 top-2 z-10 rounded bg-primary px-2 py-0.5 text-xs font-bold text-white">EXCLUSIVITÉ</div>
             <div className="absolute right-2 top-2 z-10 rounded bg-gray-800 px-2 py-0.5 text-xs font-bold text-white">VENTE</div>
-            <div className="relative h-44 w-full">
+            <div className="relative h-44 w-full overflow-hidden">
               <Image
                 src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=500"
                 alt="Exclusivité"
                 fill
                 className="object-cover"
+                style={pulseStyle}
               />
             </div>
             <div className="bg-gray-800 py-2 text-center">

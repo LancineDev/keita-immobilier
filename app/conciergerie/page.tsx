@@ -27,6 +27,16 @@ const prestations = [
 export default function ConciergeriePage() {
   return (
     <main className="min-h-screen">
+      <style>{`
+        @keyframes pulse-scale {
+          0%, 100% { transform: scale(1); }
+          50%       { transform: scale(1.06); }
+        }
+        .img-pulse {
+          animation: pulse-scale 4s ease-in-out infinite;
+        }
+      `}</style>
+
       <Header />
 
       {/* Hero Banner */}
@@ -35,7 +45,7 @@ export default function ConciergeriePage() {
           src={conciergeImage}
           alt="Conciergerie"
           fill
-          className="object-cover"
+          className="object-cover img-pulse"
           priority
         />
         <div className="absolute inset-0 bg-black/40" />
@@ -84,7 +94,7 @@ export default function ConciergeriePage() {
               src={conciergeImage}
               alt="Professionnel conciergerie"
               fill
-              className="object-cover object-top"
+              className="object-cover object-top img-pulse"
             />
           </div>
         </div>

@@ -11,7 +11,7 @@ import { Button } from "@/components/ui/button"
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
 
-const ADMIN_EMAIL = "knktech@keita.ci"
+const ADMIN_EMAIL = "keitaimmobilier@gmail.com"
 
 export default function ConnexionPage() {
   const { loginWithGoogle } = useAuth()

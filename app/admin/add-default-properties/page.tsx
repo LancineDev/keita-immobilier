@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button"
 import { useRouter } from "next/navigation"
 import { collection, addDoc, serverTimestamp } from "firebase/firestore"
 import { db } from "@/lib/firebase"
+import { notifyAllUsers } from "@/lib/notifications"
 
 const defaultProperties = [
   {
@@ -183,6 +184,27 @@ export default function AddDefaultPropertiesPage() {
         })
         console.log(`Added: ${property.title}`)
       }
+      
+      // Send notification to all users about the new properties
+      try {
+        // Send individual notifications for each property
+        for (const property of defaultProperties) {
+          await notifyAllUsers(
+            "🏠 Nouvelle Propriété Disponible",
+            `${property.title} - ${property.price}`,
+            {
+              propertyTitle: property.title,
+              propertyType: property.type,
+              location: `${property.quartier}, ${property.ville}`,
+              price: property.price,
+            }
+          )
+        }
+      } catch (notificationError) {
+        console.error("Failed to send notifications:", notificationError)
+        // Don't fail the property creation if notification fails
+      }
+      
       setMessage("✅ 10 default properties added successfully!")
     } catch (error) {
       console.error("Error:", error)

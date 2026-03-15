@@ -22,6 +22,16 @@ const steps = [
 export default function LocationPage() {
   return (
     <main className="min-h-screen">
+      <style>{`
+        @keyframes pulse-scale {
+          0%, 100% { transform: scale(1); }
+          50%       { transform: scale(1.06); }
+        }
+        .img-pulse {
+          animation: pulse-scale 4s ease-in-out infinite;
+        }
+      `}</style>
+
       <Header />
 
       {/* Hero Banner */}
@@ -30,7 +40,7 @@ export default function LocationPage() {
           src={locationImage}
           alt="Location immobilière"
           fill
-          className="object-cover"
+          className="object-cover img-pulse"
           priority
         />
         <div className="absolute inset-0 bg-black/30" />
@@ -44,7 +54,6 @@ export default function LocationPage() {
       {/* Section 1 - Faire louer : texte gauche, image droite */}
       <section className="mx-auto max-w-6xl px-6 py-16">
         <div className="grid grid-cols-1 gap-12 lg:grid-cols-2 lg:items-start">
-          {/* Texte */}
           <div>
             <h2 className="mb-5 font-serif text-2xl font-bold text-foreground">
               Vous souhaitez faire louer votre bien ?
@@ -73,7 +82,7 @@ export default function LocationPage() {
               src={locationImage}
               alt="Agent immobilier"
               fill
-              className="object-cover"
+              className="object-cover img-pulse"
             />
           </div>
         </div>
@@ -88,11 +97,10 @@ export default function LocationPage() {
               src={locationImage}
               alt="Remise de clés"
               fill
-              className="object-cover"
+              className="object-cover img-pulse"
             />
           </div>
 
-          {/* Texte droite */}
           <div>
             <h2 className="mb-5 font-serif text-2xl font-bold text-foreground">
               Vous souhaitez louer un bien ?

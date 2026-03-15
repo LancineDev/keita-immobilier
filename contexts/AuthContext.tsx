@@ -5,10 +5,10 @@ import {
   createUserWithEmailAndPassword, signOut, updateProfile,
   GoogleAuthProvider, signInWithPopup
 } from "firebase/auth"
-import { doc, setDoc, getDoc } from "firebase/firestore"
+import { doc, setDoc, getDoc, collection, query, where, getDocs } from "firebase/firestore"
 import { auth, db } from "@/lib/firebase"
 
-const ADMIN_EMAIL = "knktech@keita.ci"
+const ADMIN_EMAIL = "keitaimmobilier@gmail.com"
 
 type UserData = {
   uid: string
@@ -31,6 +31,33 @@ type AuthContextType = {
 }
 
 const AuthContext = createContext<AuthContextType>({} as AuthContextType)
+
+// Helper function to send admin notification
+const notifyAdminOfNewUser = async (userName: string, userEmail: string) => {
+  try {
+    const adminSnap = await getDocs(
+      query(collection(db, "users"), where("email", "==", ADMIN_EMAIL))
+    )
+
+    if (adminSnap.empty) return
+
+    const adminId = adminSnap.docs[0].id
+    await setDoc(
+      doc(db, "notifications", `${Date.now()}`),
+      {
+        userId: adminId,
+        title: "👤 Nouvel Utilisateur Inscrit",
+        message: `${userName} (${userEmail}) vient de s'inscrire`,
+        type: "user-registered",
+        data: { userName, userEmail },
+        read: false,
+        createdAt: new Date(),
+      }
+    )
+  } catch (error) {
+    console.error("Error notifying admin of new user:", error)
+  }
+}
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null)
@@ -96,6 +123,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
       await setDoc(docRef, newUser)
       setUserData(newUser)
+      
+      // Notify admin of new user registration
+      await notifyAdminOfNewUser(newUser.displayName, newUser.email)
     } else {
       setUserData(docSnap.data() as UserData)
     }
@@ -113,6 +143,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
     await setDoc(doc(db, "users", cred.user.uid), newUser)
     setUserData(newUser)
+    
+    // Notify admin of new user registration
+    await notifyAdminOfNewUser(name, email)
   }
 
   const logout = async () => {

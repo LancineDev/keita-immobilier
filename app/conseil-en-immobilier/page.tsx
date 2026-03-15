@@ -11,6 +11,10 @@ export const metadata: Metadata = {
   description: "Bénéficiez de conseils pratiques et avisés en immobilier avec KEITA.",
 }
 
+const pulseStyle: React.CSSProperties = {
+  animation: "pulse-scale 4s ease-in-out infinite",
+}
+
 const articles = [
   {
     title: "Le SYNDIC de Copropriété",
@@ -61,6 +65,13 @@ const articles = [
 export default function ConseilPage() {
   return (
     <main className="min-h-screen">
+      <style>{`
+        @keyframes pulse-scale {
+          0%, 100% { transform: scale(1); }
+          50%       { transform: scale(1.06); }
+        }
+      `}</style>
+
       <Header />
 
       {/* Hero Banner */}
@@ -70,6 +81,7 @@ export default function ConseilPage() {
           alt="Conseil en immobilier"
           fill
           className="object-cover"
+          style={pulseStyle}
           priority
         />
         <div className="absolute inset-0 bg-black/35" />
@@ -108,6 +120,7 @@ export default function ConseilPage() {
               alt="Conseil immobilier"
               fill
               className="object-cover"
+              style={pulseStyle}
             />
           </div>
         </div>
@@ -120,8 +133,8 @@ export default function ConseilPage() {
             Actualité Immobilière
           </h2>
           <div className="flex gap-2">
-           <button suppressHydrationWarning className="rounded border border-border px-3 py-1 text-sm text-foreground hover:bg-secondary">Préc</button>
-           <button suppressHydrationWarning className="rounded border border-border px-3 py-1 text-sm text-foreground hover:bg-secondary">Suiv</button>
+            <button suppressHydrationWarning className="rounded border border-border px-3 py-1 text-sm text-foreground hover:bg-secondary">Préc</button>
+            <button suppressHydrationWarning className="rounded border border-border px-3 py-1 text-sm text-foreground hover:bg-secondary">Suiv</button>
           </div>
         </div>
 
@@ -138,13 +151,14 @@ export default function ConseilPage() {
                     src={article.image}
                     alt={article.title}
                     fill
-                    className="object-cover transition-transform hover:scale-105"
+                    className="object-cover"
+                    style={pulseStyle}
                   />
                 </div>
               </Link>
 
               <div className="p-4">
-                {/* Tags — liens rouges cliquables */}
+                {/* Tags */}
                 <div className="mb-2 flex flex-wrap gap-1">
                   {article.tags.map((tag) => (
                     <Link
@@ -157,7 +171,7 @@ export default function ConseilPage() {
                   ))}
                 </div>
 
-                {/* Titre cliquable */}
+                {/* Titre */}
                 <Link href={article.href}>
                   <h3 className="mb-2 font-serif text-sm font-bold text-foreground hover:text-primary">
                     {article.title}
@@ -172,7 +186,6 @@ export default function ConseilPage() {
                   <p className="mt-2 text-xs text-muted-foreground">{article.date}</p>
                 )}
 
-                {/* Lire Plus — lien rouge cliquable */}
                 <Link
                   href={article.href}
                   className="mt-3 inline-block text-xs font-semibold text-primary hover:underline"

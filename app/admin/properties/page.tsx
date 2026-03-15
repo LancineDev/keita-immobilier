@@ -12,6 +12,7 @@ import {
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Plus, Pencil, Trash2, Eye, ArrowLeft, Upload, X, Loader2 } from "lucide-react"
+import { notifyAllUsers } from "@/lib/notifications"
 
 type Property = {
   id?: string
@@ -125,6 +126,23 @@ export default function AdminPropertiesPage() {
         await updateDoc(doc(db, "properties", editing), payload)
       } else {
         await addDoc(collection(db, "properties"), { ...payload, createdAt: serverTimestamp() })
+        
+        // Send notification to all users about the new property
+        try {
+          await notifyAllUsers(
+            "🏠 Nouvelle Propriété",
+            `${form.title} - ${form.price}`,
+            {
+              propertyTitle: form.title,
+              propertyType: form.type,
+              location: `${form.quartier}, ${form.ville}`,
+              price: form.price,
+            }
+          )
+        } catch (notificationError) {
+          console.error("Failed to send notifications:", notificationError)
+          // Don't fail the property creation if notification fails
+        }
       }
 
       setShowForm(false)

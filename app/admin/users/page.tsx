@@ -42,7 +42,7 @@ export default function AdminUsersPage() {
   }
 
   const handleDelete = async (uid: string, email: string) => {
-    if (email === "knktech@keita.ci") {
+    if (email === "keitaimmobilier@gmail.com") {
       alert("Impossible de supprimer le compte admin")
       return
     }
@@ -52,7 +52,7 @@ export default function AdminUsersPage() {
   }
 
   const toggleAdmin = async (u: UserData) => {
-    if (u.email === "knktech@keita.ci") {
+    if (u.email === "keitaimmobilier@gmail.com") {
       alert("Impossible de modifier le statut du compte principal")
       return
     }

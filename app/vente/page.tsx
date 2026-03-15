@@ -23,6 +23,16 @@ const etapes = [
 export default function VentePage() {
   return (
     <main className="min-h-screen">
+      <style>{`
+        @keyframes pulse-scale {
+          0%, 100% { transform: scale(1); }
+          50%       { transform: scale(1.06); }
+        }
+        .img-pulse {
+          animation: pulse-scale 4s ease-in-out infinite;
+        }
+      `}</style>
+
       <Header />
 
       {/* Hero Banner */}
@@ -31,7 +41,7 @@ export default function VentePage() {
           src={venteImage}
           alt="Vente immobilière"
           fill
-          className="object-cover"
+          className="object-cover img-pulse"
           priority
         />
         <div className="absolute inset-0 bg-black/30" />
@@ -80,7 +90,7 @@ export default function VentePage() {
               src={venteImage}
               alt="Recherche immobilière"
               fill
-              className="object-cover"
+              className="object-cover img-pulse"
             />
           </div>
         </div>
@@ -95,7 +105,7 @@ export default function VentePage() {
               src={vente1Image}
               alt="Couple cherchant un bien"
               fill
-              className="object-cover"
+              className="object-cover img-pulse"
             />
           </div>
 

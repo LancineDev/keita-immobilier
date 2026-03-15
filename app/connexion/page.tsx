@@ -11,7 +11,7 @@ import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { User, Lock } from "lucide-react"
 
-const ADMIN_EMAIL = "knktech@keita.ci"
+const ADMIN_EMAIL = "keitaimmobilier@gmail.com"
 
 export default function ConnexionPage() {
   const router = useRouter()

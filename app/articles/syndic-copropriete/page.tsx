@@ -18,7 +18,9 @@ interface PropSnippet {
   images?: string[]
 }
 
-// we'll populate this via Firestore instead of hardcoding
+const pulseStyle: React.CSSProperties = {
+  animation: "pulse-scale 4s ease-in-out infinite",
+}
 
 export default function SyndicArticlePage() {
   const [recentProperties, setRecentProperties] = useState<PropSnippet[]>([])
@@ -38,6 +40,13 @@ export default function SyndicArticlePage() {
 
   return (
     <main className="min-h-screen">
+      <style>{`
+        @keyframes pulse-scale {
+          0%, 100% { transform: scale(1); }
+          50%       { transform: scale(1.06); }
+        }
+      `}</style>
+
       <Header />
 
       {/* Barre de recherche */}
@@ -78,7 +87,13 @@ export default function SyndicArticlePage() {
 
             {/* Image article */}
             <div className="relative mb-6 h-64 w-full overflow-hidden rounded-md">
-              <Image src="/images/syndic-hero.jpeg" alt="Syndic de Copropriété" fill className="object-cover" />
+              <Image
+                src="/images/syndic-hero.jpeg"
+                alt="Syndic de Copropriété"
+                fill
+                className="object-cover"
+                style={pulseStyle}
+              />
             </div>
 
             {/* Card article */}
@@ -147,7 +162,13 @@ export default function SyndicArticlePage() {
                   <Link key={prop.id} href={`/property/${prop.id}`} className="flex gap-3 hover:opacity-80">
                     <div className="relative h-16 w-16 flex-shrink-0 overflow-hidden rounded">
                       {prop.images && prop.images.length > 0 ? (
-                        <Image src={prop.images[0]} alt={prop.title} fill className="object-cover" />
+                        <Image
+                          src={prop.images[0]}
+                          alt={prop.title}
+                          fill
+                          className="object-cover"
+                          style={pulseStyle}
+                        />
                       ) : (
                         <div className="flex h-full w-full items-center justify-center bg-secondary text-xs text-muted-foreground">No img</div>
                       )}
