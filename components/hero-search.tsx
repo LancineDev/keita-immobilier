@@ -54,11 +54,17 @@ export function HeroSearch() {
 
   return (
     <section className="relative min-h-[600px] lg:min-h-[700px]">
-      {/* Background image */}
-      <div
-        className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-        style={{ backgroundImage: "url('/images/hero-bg.jpg')" }}
-      >
+      {/* Video background */}
+      <div className="absolute inset-0 overflow-hidden">
+        <video
+          autoPlay
+          muted
+          loop
+          playsInline
+          className="absolute inset-0 w-full h-full object-cover"
+        >
+          <source src="/images/istockphoto-1307701011-640_adpp_is.mp4" type="video/mp4" />
+        </video>
         <div className="absolute inset-0 bg-foreground/50" />
       </div>
 

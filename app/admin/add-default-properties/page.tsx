@@ -139,7 +139,7 @@ const defaultProperties = [
     category: "Villa Duplex 8 Pièces",
     description: "Grande villa duplex de 8 pièces à Angré. Résidence haut standing avec piscine, jardin paysager et système de sécurité.",
     features: "Piscine, Jardin, Gardiennage, Parking",
-    images: ["/images/hero-bg.jpg"],
+    images: ["/images/her-bg.jpg"],
     loyer: "1.700.000 FCFA"
   },
   {
