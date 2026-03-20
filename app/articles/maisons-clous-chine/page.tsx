@@ -1,5 +1,6 @@
 "use client"
 import { useState, useEffect } from "react"
+import { useRouter } from "next/navigation"
 import Link from "next/link"
 import Image from "next/image"
 import { Header } from "@/components/header"
@@ -9,7 +10,9 @@ import { db } from "@/lib/firebase"
 import { collection, query, orderBy, limit, getDocs } from "firebase/firestore"
 
 export default function MaisonsClousPage() {
+  const router = useRouter()
   const [recentProps, setRecentProps] = useState<any[]>([])
+  const [searchQuery, setSearchQuery] = useState("")
   const [montant, setMontant] = useState("")
   const [apport, setApport] = useState("")
   const [taux, setTaux] = useState("")
@@ -27,6 +30,16 @@ export default function MaisonsClousPage() {
     fetchRecent()
   }, [])
 
+  const handleSearch = () => {
+    const trimmed = searchQuery.trim()
+    if (!trimmed) return
+    router.push(`/conseil-en-immobilier?q=${encodeURIComponent(trimmed)}`)
+  }
+
+  const handleSearchKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") handleSearch()
+  }
+
   const calculer = () => {
     const M = parseFloat(montant.replace(/\s/g, "")) || 0
     const A = parseFloat(apport.replace(/\s/g, "")) || 0
@@ -40,43 +53,6 @@ export default function MaisonsClousPage() {
   return (
     <main className="min-h-screen bg-white">
       <Header />
-
-      {/* Barre de recherche */}
-      <div className="border-b border-gray-200 bg-white py-3 shadow-sm">
-        <div className="mx-auto flex max-w-7xl flex-wrap items-center gap-2 px-6">
-          <div className="flex flex-1 items-center gap-2 rounded border border-gray-300 px-3 py-2">
-            <Search className="h-4 w-4 text-gray-400" />
-            <input placeholder="Chercher une ville ou un code postal" className="flex-1 bg-transparent text-sm outline-none" />
-          </div>
-          <select className="rounded border border-gray-300 px-3 py-2 text-sm text-gray-600">
-            <option value="">Type d&apos;opération</option>
-            <option>VENTE</option>
-            <option>LOCATION</option>
-            <option>Tous</option>
-          </select>
-          <select className="rounded border border-gray-300 px-3 py-2 text-sm text-gray-600">
-            <option value="">Type de bien</option>
-            <option>Appartement</option>
-            <option>Bureau</option>
-            <option>Maison</option>
-            <option>Studio</option>
-            <option>Terrain</option>
-            <option>Villa Basse</option>
-            <option>Villa Duplex</option>
-            <option>Tous</option>
-          </select>
-          <select className="rounded border border-gray-300 px-3 py-2 text-sm text-gray-600">
-            <option value="">Chambres</option>
-            {[1,2,3,4,5,6,7,8,9,10].map(n => <option key={n}>{n}</option>)}
-            <option>Tous</option>
-          </select>
-          <input placeholder="Surface Min" className="w-28 rounded border border-gray-300 px-3 py-2 text-sm outline-none" />
-          <input placeholder="Budget Max (FCFA)" className="w-36 rounded border border-gray-300 px-3 py-2 text-sm outline-none" />
-          <button className="rounded bg-primary px-5 py-2 text-sm font-bold text-white hover:bg-primary/90">
-            Rechercher
-          </button>
-        </div>
-      </div>
 
       <div className="mx-auto max-w-7xl px-6 py-8">
 
@@ -190,10 +166,16 @@ export default function MaisonsClousPage() {
               <h3 className="mb-4 font-serif text-lg font-bold text-foreground">Recherche</h3>
               <div className="flex gap-2">
                 <input
+                  value={searchQuery}
+                  onChange={e => setSearchQuery(e.target.value)}
+                  onKeyDown={handleSearchKeyDown}
                   placeholder="Rechercher..."
                   className="flex-1 rounded border border-gray-300 px-3 py-2 text-sm outline-none focus:border-primary"
                 />
-                <button className="rounded bg-primary px-3 py-2 text-white hover:bg-primary/90">
+                <button
+                  onClick={handleSearch}
+                  className="rounded bg-primary px-3 py-2 text-white hover:bg-primary/90 transition-colors"
+                >
                   <Search className="h-4 w-4" />
                 </button>
               </div>
@@ -245,22 +227,23 @@ export default function MaisonsClousPage() {
             {/* Exclusivités */}
             <div className="rounded-lg border border-gray-200 bg-white p-5 shadow-sm">
               <h3 className="mb-4 font-serif text-lg font-bold text-foreground">Exclusivités</h3>
-              <Link href="/property" className="block overflow-hidden rounded-lg hover:opacity-90 transition-opacity"><div className="relative">
-                <div className="absolute left-2 top-2 z-10 rounded bg-primary px-2 py-0.5 text-xs font-bold text-white">EXCLUSIVITÉ</div>
-                <div className="absolute right-2 top-2 z-10 rounded bg-gray-800 px-2 py-0.5 text-xs font-bold text-white">VENTE</div>
-                <div className="relative h-44 w-full">
-                  <Image
-                    src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=500"
-                    alt="Exclusivité"
-                    fill
-                    className="object-cover"
-                  />
+              <Link href="/property" className="block overflow-hidden rounded-lg hover:opacity-90 transition-opacity">
+                <div className="relative">
+                  <div className="absolute left-2 top-2 z-10 rounded bg-primary px-2 py-0.5 text-xs font-bold text-white">EXCLUSIVITÉ</div>
+                  <div className="absolute right-2 top-2 z-10 rounded bg-gray-800 px-2 py-0.5 text-xs font-bold text-white">VENTE</div>
+                  <div className="relative h-44 w-full">
+                    <Image
+                      src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=500"
+                      alt="Exclusivité"
+                      fill
+                      className="object-cover"
+                    />
+                  </div>
+                  <div className="bg-gray-800 py-2 text-center">
+                    <p className="font-bold text-white">264.000.000 FCFA</p>
+                  </div>
                 </div>
-                <div className="bg-gray-800 py-2 text-center">
-                  <p className="font-bold text-white">264.000.000 FCFA</p>
-                </div>
-              </div>
-            </Link>
+              </Link>
             </div>
 
             {/* Calculez vos mensualités */}

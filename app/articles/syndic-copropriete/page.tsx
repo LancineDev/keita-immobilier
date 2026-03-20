@@ -1,5 +1,6 @@
 "use client"
 import { useState, useEffect } from "react"
+import { useRouter } from "next/navigation"
 import Image from "next/image"
 import Link from "next/link"
 import { Header } from "@/components/header"
@@ -23,7 +24,14 @@ const pulseStyle: React.CSSProperties = {
 }
 
 export default function SyndicArticlePage() {
+  const router = useRouter()
   const [recentProperties, setRecentProperties] = useState<PropSnippet[]>([])
+  const [searchQuery, setSearchQuery] = useState("")
+  const [montant, setMontant] = useState("")
+  const [apport, setApport] = useState("")
+  const [taux, setTaux] = useState("")
+  const [duree, setDuree] = useState("")
+  const [mensualite, setMensualite] = useState<number | null>(null)
 
   useEffect(() => {
     const q = query(
@@ -38,6 +46,26 @@ export default function SyndicArticlePage() {
     return () => unsub()
   }, [])
 
+  const handleSearch = () => {
+    const trimmed = searchQuery.trim()
+    if (!trimmed) return
+    router.push(`/conseil-en-immobilier?q=${encodeURIComponent(trimmed)}`)
+  }
+
+  const handleSearchKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") handleSearch()
+  }
+
+  const calculer = () => {
+    const M = parseFloat(montant.replace(/\s/g, "")) || 0
+    const A = parseFloat(apport.replace(/\s/g, "")) || 0
+    const T = parseFloat(taux) / 100 / 12
+    const N = parseFloat(duree) * 12
+    const principal = M - A
+    if (!T || !N || !principal) { setMensualite(null); return }
+    setMensualite(Math.round((principal * T) / (1 - Math.pow(1 + T, -N))))
+  }
+
   return (
     <main className="min-h-screen">
       <style>{`
@@ -48,25 +76,6 @@ export default function SyndicArticlePage() {
       `}</style>
 
       <Header />
-
-      {/* Barre de recherche */}
-      <div className="border-b border-border bg-background py-3">
-        <div className="mx-auto flex max-w-6xl flex-wrap items-center gap-2 px-6">
-          <div className="flex flex-1 items-center gap-2 rounded border border-border px-3 py-2">
-            <Search className="h-4 w-4 text-muted-foreground" />
-            <input placeholder="Chercher une ville ou un code postal" className="flex-1 bg-transparent text-sm outline-none" />
-          </div>
-          <select className="rounded border border-border px-3 py-2 text-sm">
-            <option>Type d&apos;opération</option>
-            <option>Vente</option>
-            <option>Location</option>
-          </select>
-          <select className="rounded border border-border px-3 py-2 text-sm">
-            <option>Type de bien</option>
-          </select>
-          <Button className="bg-primary text-white hover:bg-primary/90">Rechercher</Button>
-        </div>
-      </div>
 
       {/* Breadcrumb */}
       <div className="mx-auto max-w-6xl px-6 py-3 text-sm text-muted-foreground">
@@ -147,8 +156,18 @@ export default function SyndicArticlePage() {
             <div className="rounded-md border border-border p-4">
               <h3 className="mb-3 font-serif text-lg font-bold text-foreground">Recherche</h3>
               <div className="flex gap-2">
-                <Input placeholder="Rechercher" className="flex-1" />
-                <Button size="icon" className="bg-primary text-white hover:bg-primary/90">
+                <Input
+                  value={searchQuery}
+                  onChange={e => setSearchQuery(e.target.value)}
+                  onKeyDown={handleSearchKeyDown}
+                  placeholder="Rechercher"
+                  className="flex-1"
+                />
+                <Button
+                  size="icon"
+                  onClick={handleSearch}
+                  className="bg-primary text-white hover:bg-primary/90"
+                >
                   <Search className="h-4 w-4" />
                 </Button>
               </div>
@@ -191,26 +210,57 @@ export default function SyndicArticlePage() {
               <div className="space-y-3">
                 <div className="flex items-center gap-2 rounded border border-border px-3 py-2">
                   <span className="text-xs text-muted-foreground">FCFA</span>
-                  <input placeholder="Montant du crédit" className="flex-1 bg-transparent text-sm outline-none" />
+                  <input
+                    value={montant}
+                    onChange={e => setMontant(e.target.value)}
+                    placeholder="Montant du crédit"
+                    className="flex-1 bg-transparent text-sm outline-none"
+                  />
                 </div>
                 <div className="flex items-center gap-2 rounded border border-border px-3 py-2">
                   <span className="text-xs text-muted-foreground">FCFA</span>
-                  <input placeholder="Apport" className="flex-1 bg-transparent text-sm outline-none" />
+                  <input
+                    value={apport}
+                    onChange={e => setApport(e.target.value)}
+                    placeholder="Apport"
+                    className="flex-1 bg-transparent text-sm outline-none"
+                  />
                 </div>
                 <div className="flex items-center gap-2 rounded border border-border px-3 py-2">
                   <span className="text-xs text-muted-foreground">%</span>
-                  <input placeholder="Taux d'intérêt" className="flex-1 bg-transparent text-sm outline-none" />
+                  <input
+                    value={taux}
+                    onChange={e => setTaux(e.target.value)}
+                    placeholder="Taux d'intérêt"
+                    className="flex-1 bg-transparent text-sm outline-none"
+                  />
                 </div>
                 <div className="flex items-center gap-2 rounded border border-border px-3 py-2">
-                  <input placeholder="Durée du prêt (années)" className="flex-1 bg-transparent text-sm outline-none" />
+                  <input
+                    value={duree}
+                    onChange={e => setDuree(e.target.value)}
+                    placeholder="Durée du prêt (années)"
+                    className="flex-1 bg-transparent text-sm outline-none"
+                  />
                 </div>
                 <select className="w-full rounded border border-border px-3 py-2 text-sm">
                   <option>Mensuel</option>
                   <option>Annuel</option>
                 </select>
-                <Button className="w-full bg-foreground text-background hover:bg-foreground/80">
+                <Button
+                  onClick={calculer}
+                  className="w-full bg-foreground text-background hover:bg-foreground/80"
+                >
                   Calculer
                 </Button>
+                {mensualite !== null && (
+                  <div className="rounded bg-primary/10 px-4 py-3 text-center">
+                    <p className="text-xs text-muted-foreground">Mensualité estimée</p>
+                    <p className="text-lg font-bold text-primary">
+                      {mensualite.toLocaleString("fr-FR")} FCFA/mois
+                    </p>
+                  </div>
+                )}
               </div>
             </div>
 

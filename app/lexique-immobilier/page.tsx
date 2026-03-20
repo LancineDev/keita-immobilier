@@ -1,5 +1,6 @@
 "use client"
 import { useState, useEffect } from "react"
+import { useRouter } from "next/navigation"
 import Link from "next/link"
 import Image from "next/image"
 import { Header } from "@/components/header"
@@ -22,7 +23,9 @@ const articles = [
 ]
 
 export default function LexiqueImmobilierPage() {
+  const router = useRouter()
   const [recentProps, setRecentProps] = useState<any[]>([])
+  const [searchQuery, setSearchQuery] = useState("")
   const [montant, setMontant] = useState("")
   const [apport, setApport] = useState("")
   const [taux, setTaux] = useState("")
@@ -40,6 +43,16 @@ export default function LexiqueImmobilierPage() {
     fetchRecent()
   }, [])
 
+  const handleSearch = () => {
+    const trimmed = searchQuery.trim()
+    if (!trimmed) return
+    router.push(`/conseil-en-immobilier?q=${encodeURIComponent(trimmed)}`)
+  }
+
+  const handleSearchKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") handleSearch()
+  }
+
   const calculer = () => {
     const M = parseFloat(montant.replace(/\s/g, "")) || 0
     const A = parseFloat(apport.replace(/\s/g, "")) || 0
@@ -53,32 +66,6 @@ export default function LexiqueImmobilierPage() {
   return (
     <main className="min-h-screen bg-white">
       <Header />
-
-      {/* Barre de recherche */}
-      <div className="border-b border-gray-200 bg-white py-3 shadow-sm">
-        <div className="mx-auto flex max-w-7xl flex-wrap items-center gap-2 px-6">
-          <div className="flex flex-1 items-center gap-2 rounded border border-gray-300 px-3 py-2">
-            <Search className="h-4 w-4 text-gray-400" />
-            <input placeholder="Chercher une ville ou un code postal" className="flex-1 bg-transparent text-sm outline-none" />
-          </div>
-          <select className="rounded border border-gray-300 px-3 py-2 text-sm text-gray-600">
-            <option>Type d&apos;opération</option>
-            <option>LOCATION</option>
-            <option>VENTE</option>
-          </select>
-          <select className="rounded border border-gray-300 px-3 py-2 text-sm text-gray-600">
-            <option>Type de bien</option>
-          </select>
-          <select className="rounded border border-gray-300 px-3 py-2 text-sm text-gray-600">
-            <option>Chambres</option>
-          </select>
-          <input placeholder="Surface Min" className="w-28 rounded border border-gray-300 px-3 py-2 text-sm outline-none" />
-          <input placeholder="Budget Max (FCFA)" className="w-36 rounded border border-gray-300 px-3 py-2 text-sm outline-none" />
-          <button className="rounded bg-primary px-5 py-2 text-sm font-bold text-white hover:bg-primary/90">
-            Rechercher
-          </button>
-        </div>
-      </div>
 
       <div className="mx-auto max-w-7xl px-6 py-8">
 
@@ -101,7 +88,6 @@ export default function LexiqueImmobilierPage() {
             {articles.map((article, i) => (
               <div key={i} className="rounded-lg border border-gray-200 bg-white shadow-sm overflow-hidden">
 
-                {/* Image centrée */}
                 <div className="flex justify-center p-6 pb-0">
                   <div className="relative h-56 w-80 overflow-hidden rounded">
                     <Image
@@ -113,7 +99,6 @@ export default function LexiqueImmobilierPage() {
                   </div>
                 </div>
 
-                {/* Contenu article */}
                 <div className="p-6">
                   <Link href={article.href}>
                     <h2 className="mb-4 font-serif text-2xl font-bold text-foreground hover:text-primary transition-colors">
@@ -124,7 +109,6 @@ export default function LexiqueImmobilierPage() {
                     {article.excerpt}
                   </p>
 
-                  {/* Meta */}
                   <div className="flex flex-wrap items-center justify-between border-t border-gray-100 pt-4">
                     <div className="flex flex-wrap items-center gap-4 text-sm text-gray-400">
                       <span>par {article.author}</span>
@@ -153,10 +137,16 @@ export default function LexiqueImmobilierPage() {
               <h3 className="mb-4 font-serif text-lg font-bold text-foreground">Recherche</h3>
               <div className="flex gap-2">
                 <input
+                  value={searchQuery}
+                  onChange={e => setSearchQuery(e.target.value)}
+                  onKeyDown={handleSearchKeyDown}
                   placeholder="Rechercher..."
                   className="flex-1 rounded border border-gray-300 px-3 py-2 text-sm outline-none focus:border-primary"
                 />
-                <button className="rounded bg-primary px-3 py-2 text-white hover:bg-primary/90">
+                <button
+                  onClick={handleSearch}
+                  className="rounded bg-primary px-3 py-2 text-white hover:bg-primary/90 transition-colors"
+                >
                   <Search className="h-4 w-4" />
                 </button>
               </div>
@@ -186,7 +176,6 @@ export default function LexiqueImmobilierPage() {
                     </div>
                   </Link>
                 )) : (
-                  // Fallback si pas de propriétés Firestore
                   [
                     { title: "Angré 8e Tranche – Appartements Meublés (2 et 3 pièces)", price: "À partir de 300000 F CFA", detail: "Appartement 2 Pièces, Appartement 3 Pièces" },
                     { title: "Angré 8e Tranche – Studio meublé", price: "À partir de 250000 F CFA", detail: "1 Chambre • 1 Salle(s) de bain(s) • Studio" },

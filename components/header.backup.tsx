@@ -1,14 +1,18 @@
 "use client"
 
 import { useState } from "react"
+import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import {
   Phone, Mail, Facebook, Instagram, Linkedin, Youtube,
   Menu, User, Home, Key, ShoppingBag, ClipboardList,
   ConciergeBell, Building2, Lightbulb, MessageSquare,
+  Search, SlidersHorizontal
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 
 const navItems = [
@@ -22,12 +26,21 @@ const navItems = [
   { href: "/contact", label: "CONTACT", icon: MessageSquare },
 ]
 
+const propertyTypes = [
+  "Appartement", "Maison", "Terrain", "Local commercial", "Parking",
+  "Bureau", "Villa Basse", "Villa Duplex", "Studio", "Immeuble"
+]
+
+const bedrooms = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"]
+
 export function Header() {
   const [isOpen, setIsOpen] = useState(false)
   const pathname = usePathname()
+  const isHome = pathname === "/"
 
   return (
     <header className="sticky top-0 z-50 w-full">
+      {/* Top bar */}
       <div className="bg-primary text-primary-foreground">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-1.5 text-xs">
           <div className="flex items-center gap-4">
@@ -49,8 +62,10 @@ export function Header() {
         </div>
       </div>
 
+      {/* Main nav */}
       <nav className="border-b border-border bg-background">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-2">
+          {/* Logo */}
           <Link href="/" className="flex flex-shrink-0 items-center gap-2">
             <div className="flex h-10 w-10 items-center justify-center rounded-sm bg-primary lg:h-12 lg:w-12">
               <span className="font-serif text-xl font-bold text-primary-foreground lg:text-2xl">K</span>
@@ -61,6 +76,7 @@ export function Header() {
             </div>
           </Link>
 
+          {/* Desktop nav - icon based */}
           <div className="hidden items-center gap-1 xl:flex">
             {navItems.map((item) => {
               const Icon = item.icon
@@ -80,6 +96,7 @@ export function Header() {
             })}
           </div>
 
+          {/* Right actions */}
           <div className="flex items-center gap-2">
             <Link
               href="/connexion"
@@ -89,6 +106,7 @@ export function Header() {
               CONNEXION
             </Link>
 
+            {/* Mobile menu */}
             <Sheet open={isOpen} onOpenChange={setIsOpen}>
               <SheetTrigger asChild>
                 <Button variant="ghost" size="icon" className="xl:hidden">
@@ -127,6 +145,74 @@ export function Header() {
           </div>
         </div>
       </nav>
+
+      {/* Horizontal search bar - always visible on inner pages, hidden on home (hero has its own) */}
+      {!isHome && !pathname.startsWith("/property") && !pathname.startsWith("/articles") && !pathname.startsWith("/centre-affaires") && !pathname.startsWith("/keita-centre-affaires") && !pathname.startsWith("/lexique") && !pathname.startsWith("/centre-affaires") && <SearchBar />}
     </header>
   )
 }
+
+function SearchBar() {
+  return (
+    <div className="border-b border-border bg-background">
+      <div className="mx-auto flex max-w-7xl flex-wrap items-center gap-2 px-4 py-2">
+        <div className="flex flex-1 items-center gap-2">
+          <Search className="h-4 w-4 flex-shrink-0 text-muted-foreground" />
+          <Input
+            placeholder="Chercher une ville ou un code postal"
+            className="h-9 min-w-[160px] flex-1 border-border bg-background text-sm"
+          />
+        </div>
+        <Select>
+          <SelectTrigger className="h-9 w-auto min-w-[140px] border-border text-sm">
+            <SelectValue placeholder="Type d'operation" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="acheter">Acheter</SelectItem>
+            <SelectItem value="louer">Louer</SelectItem>
+            <SelectItem value="tout">Tout</SelectItem>
+          </SelectContent>
+        </Select>
+        <Select>
+          <SelectTrigger className="h-9 w-auto min-w-[130px] border-border text-sm">
+            <SelectValue placeholder="Type de bien" />
+          </SelectTrigger>
+          <SelectContent>
+            {propertyTypes.map((type) => (
+              <SelectItem key={type} value={type.toLowerCase()}>{type}</SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+        <Select>
+          <SelectTrigger className="h-9 w-auto min-w-[110px] border-border text-sm">
+            <SelectValue placeholder="Chambres" />
+          </SelectTrigger>
+          <SelectContent>
+            {bedrooms.map((b) => (
+              <SelectItem key={b} value={b}>{b}</SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+        <Input
+          placeholder="Surface Min (m2)"
+          type="number"
+          className="h-9 w-[120px] border-border text-sm"
+        />
+        <Input
+          placeholder="Budget Max (FCFA)"
+          type="number"
+          className="h-9 w-[140px] border-border text-sm"
+        />
+        <Button variant="ghost" size="sm" className="h-9 text-xs text-muted-foreground hover:text-primary">
+          <SlidersHorizontal className="mr-1 h-3.5 w-3.5" />
+          {"Avance"}
+        </Button>
+        <Button size="sm" className="h-9 bg-primary px-4 text-xs text-primary-foreground hover:bg-primary/90">
+          Rechercher
+        </Button>
+      </div>
+    </div>
+  )
+}
+
+
